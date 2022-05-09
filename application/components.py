@@ -26,7 +26,8 @@ class classifier_inference():
         config.read(config_file)
         print(config)
         self.IMG_SIZE= int(config["MODEL_PARAMETERS"]["IMG_SIZE"]) #the input imag_size (depends onf the backbone model)   
-        self.CheckPoint_Dir = str(config["MODEL_PARAMETERS"]["CheckPoint_dir"]) # number of sample to be worked on before updating the model parameters
+        CheckPoint_Dir = str(config["MODEL_PARAMETERS"]["CheckPoint_dir"]) 
+        self.CheckPoint_Dir = os.path.join(os.path.dirname(__file__), CheckPoint_Dir)
         self.laod_model()
         
     def laod_model(self):
@@ -44,7 +45,7 @@ class classifier_inference():
         clas = Dropout(0.2)(clas)
         clas = Dense(5, activation='softmax', name='clas')(clas)
         self._model = keras.Model(inputs=InputLayer,outputs=clas)
-        #self._model.load_weights(self.CheckPoint_Dir)
+        self._model.load_weights(self.CheckPoint_Dir)
         return self._model
         
     def preprocess(self, image:Image.Image):
